@@ -1,14 +1,12 @@
 #include <config.h>
 #include <Arduino.h>
+#include <OT
 #include <FastLED.h>
-#include <AnimationManager.h>
-#include <api.h>
+#include <AnimationManager.hpp>
+#include <api.hpp>
+#include <json.hpp>
 
-#include <rainbow.h>
-#include <marquee.h>
-#include <twinkle.h>
-#include <comet.h>
-#include <simple_colors.h>
+#include <simple_colors.hpp>
 
 CRGB leds[LED_COUNT];
 
@@ -201,10 +199,31 @@ void colors(void *par)
   }
 }
 
+Cjson json;
+void onGetList()
+{
+  Animation *list = Manager.getList();
+
+  json.clear();
+
+  for (int i = 0; i < Manager.listLength(); i++)
+  {
+    json.document["animations"][i] = list[i].name;
+  }
+
+  json.send();
+}
+
+void onStop()
+{
+  Manager.stop();
+  APIserver.sendOK();
+}
+
 void setup()
 {
   Serial.begin(9600);
-  // put your setup code here, to run once:
+
   FastLED.addLeds<WS2852, LED_PIN, RGB>(leds, LED_COUNT);
   FastLED.showColor(CRGB::Black);
   FastLED.setBrightness(255);
@@ -212,36 +231,19 @@ void setup()
   /*
   register animations;
   */
-  // default configs
-  acceleration_config d_acceleration;
-  colors_config d_colors;
-  rainbow_config d_rainbow;
-  marquee_config d_marquee;
-  twinkle_config d_twinkle;
-  comet_config d_comet;
-  simple_color_config d_simple_color;
-
-  // create array.
-  Animation arr[ANIMATION_ARR_LEN] = {
-      Animation("test", test, NULL),
-      Animation("acceleration", acceleration, &d_acceleration),
-      Animation("colors", colors, &d_colors),
-      Animation("rainbow", rainbow, &d_rainbow),
-      Animation("marquee", marquee, &d_marquee),
-      Animation("twinkle", twinkle, &d_twinkle),
-      Animation("comet", comet, &d_comet),
-      Animation("simple color", simple_color, &d_simple_color)};
-  // load array.
-  Manager.loadList(arr);
+  simple_colors::init();
 
   ConnectToWiFi();
 
-  APIserver.start();
+  // general api commands
+  APIserver.onList(onGetList);
+  APIserver.onStop(onStop);
+
+  // start server
+  APIserver.begin();
 }
 
 void loop()
 {
-  for (;;)
-  {
-  }
+  APIserver.handleClient();
 }

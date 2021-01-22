@@ -8,7 +8,10 @@
 
 #define get_state Animation_state &state = *(Animation_state *)par
 #define get_config(type) type &config = *(type *)state.config
-#define stop_task FastLED.clear(); FastLED.show(); vTaskDelete(NULL);
+#define stop_task    \
+    FastLED.clear(); \
+    FastLED.show();  \
+    vTaskDelete(NULL);
 
 struct Animation
 {
@@ -23,8 +26,8 @@ struct Animation
 
 struct Animation_state
 {
-    bool run = true;
-    void* config;
+    bool run = false;
+    void *config;
 };
 
 class AnimationManager
@@ -33,19 +36,26 @@ private:
     Animation animationsArr[ANIMATION_ARR_LEN];
     TaskHandle_t task0;
     Animation_state current_animation;
+    int j = 0;
 
 protected:
 public:
     AnimationManager(){};
-    AnimationManager(Animation list[ANIMATION_ARR_LEN])
-    {
-        loadList(list);
-    };
+    ~AnimationManager(){};
 
-    void loadList(Animation list[ANIMATION_ARR_LEN])
+    void addToList(Animation anim)
     {
-        for (size_t i = 0; i < ANIMATION_ARR_LEN; i++)
-            animationsArr[i] = list[i];
+        if (j >= ANIMATION_ARR_LEN)
+            return;
+        animationsArr[j] = anim;
+        j++;
+    }
+
+    Animation* getList() {
+        return animationsArr;
+    }
+    int listLength() {
+        return j;
     }
 
     void start(String name)
@@ -55,6 +65,9 @@ public:
     }
     void start(String name, void *par)
     {
+        if (current_animation.run)
+            return;
+        
         Animation *anim = getByName(name); // get animation struct
 
         int len = name.length() + 1;
@@ -79,7 +92,8 @@ public:
         delay(5);
     }
 
-    bool keepRunning() {
+    bool keepRunning()
+    {
         return current_animation.run;
     }
 

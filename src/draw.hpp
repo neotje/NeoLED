@@ -1,8 +1,8 @@
 #ifndef draw_h
 #define draw_h
 
-#include <config.h>
-#include <AnimationManager.h>
+#include <config.hpp>
+#include <AnimationManager.hpp>
 
 extern CRGB leds[];
 

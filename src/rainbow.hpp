@@ -1,5 +1,5 @@
-#include <config.h>
-#include <AnimationManager.h>
+#include <config.hpp>
+#include <AnimationManager.hpp>
 
 extern CRGB leds[];
 

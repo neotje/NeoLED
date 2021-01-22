@@ -1,6 +1,6 @@
 #include <config.h>
-#include <AnimationManager.h>
-#include <draw.h>
+#include <AnimationManager.hpp>
+#include <draw.hpp>
 
 struct marquee_config
 {
