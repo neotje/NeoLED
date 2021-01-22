@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <FastLED.h>
 #include <AnimationManager.h>
+#include <api.h>
 
 #include <rainbow.h>
 #include <marquee.h>
@@ -233,7 +234,9 @@ void setup()
   // load array.
   Manager.loadList(arr);
 
-  Manager.start("comet");
+  ConnectToWiFi();
+
+  APIserver.start();
 }
 
 void loop()
