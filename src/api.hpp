@@ -36,7 +36,7 @@ public:
     CAPIServer(int p = 80) : WebServer(p) {}
     ~CAPIServer() {}
 
-    void registerAnimationAPI(String name, THandlerFunction optionsGetCallback, THandlerFunction optionsPostCallback, THandlerFunction startCallback)
+    void registerAnimationAPI(String name, THandlerFunction optionsAvailableCallback, THandlerFunction optionsGetCallback, THandlerFunction optionsPostCallback, THandlerFunction startCallback)
     {
         if (name.indexOf(" ") > -1)
         {
@@ -44,12 +44,17 @@ public:
             return;
         }
 
+        on(String("/options/available/") + name, optionsAvailableCallback);
         on(String("/options/get/") + name, optionsGetCallback);
         on(String("/options/set/") + name, HTTP_POST, optionsPostCallback);
         on(String("/start/") + name, startCallback);
 
-#ifdef VERBOSE
         Serial.println(String("API server registered: ") + name);
+#ifdef VERBOSE
+        Serial.println(String("/options/available/") + name);
+        Serial.println(String("/options/get/") + name);
+        Serial.println(String("/options/set/") + name);
+        Serial.println(String("/start/") + name);
 #endif
     }
 
@@ -61,6 +66,11 @@ public:
     void onStop(THandlerFunction onStopCurrent)
     {
         on("/stop", onStopCurrent);
+    }
+
+    void onCurrent(THandlerFunction onGetCurrent)
+    {
+        on("/current", onGetCurrent);
     }
 
     void sendOK()

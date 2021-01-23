@@ -31,10 +31,18 @@ namespace simple_colors
     }
 
     // function to handle http get request and send back list of options.
-    void onGetOptionsAPIrequest()
+    void onAvailableOptionsAPIrequest()
     {
         json.clear();
         json.add_key("color", "RGB");
+        json.send();
+    }
+
+    void onGetOptionsAPIrequest() {
+        json.clear();
+        json.document["color"]["r"] = config.color.r;
+        json.document["color"]["g"] = config.color.g;
+        json.document["color"]["b"] = config.color.b;
         json.send();
     }
 
@@ -71,7 +79,7 @@ namespace simple_colors
     void init()
     {
         Manager.addToList(Animation(name, animationTask, &config));
-        APIserver.registerAnimationAPI(name, onGetOptionsAPIrequest, onPostOptionsAPIrequest, onStartAPIrequest);
+        APIserver.registerAnimationAPI(name, onAvailableOptionsAPIrequest, onGetOptionsAPIrequest, onPostOptionsAPIrequest, onStartAPIrequest);
     }
 
 } // namespace simple_colors

@@ -26,6 +26,7 @@ struct Animation
 
 struct Animation_state
 {
+    String name;
     bool run = false;
     void *config;
 };
@@ -58,6 +59,10 @@ public:
         return j;
     }
 
+    String currentRunning() {
+        return current_animation.name;
+    }
+
     void start(String name)
     {
         Animation *anim = getByName(name); // get animation struct
@@ -76,6 +81,7 @@ public:
 
         current_animation.run = true;
         current_animation.config = par;
+        current_animation.name = name;
 
         xTaskCreate(
             anim->function,
@@ -89,6 +95,7 @@ public:
     void stop()
     {
         current_animation.run = false;
+        current_animation.name = "";
         delay(5);
     }
 

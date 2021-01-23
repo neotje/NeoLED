@@ -1,6 +1,5 @@
 #include <config.h>
 #include <Arduino.h>
-#include <OT
 #include <FastLED.h>
 #include <AnimationManager.hpp>
 #include <api.hpp>
@@ -214,6 +213,13 @@ void onGetList()
   json.send();
 }
 
+void onGetCurrent()
+{
+  json.clear();
+  json.document["name"] = Manager.currentRunning();
+  json.send();
+}
+
 void onStop()
 {
   Manager.stop();
@@ -238,6 +244,7 @@ void setup()
   // general api commands
   APIserver.onList(onGetList);
   APIserver.onStop(onStop);
+  APIserver.onCurrent(onGetCurrent);
 
   // start server
   APIserver.begin();
