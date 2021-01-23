@@ -227,6 +227,25 @@ void onStop()
   APIserver.sendOK();
 }
 
+void onSetBrightness()
+{
+  if (!APIserver.hasArg("plain"))
+  {
+    json.clear();
+    json.add_key("brightness", FastLED.getBrightness());
+    json.send();
+  } else {
+    json.fromPost();
+
+    if (json.has_key("brightness"))
+    {
+      FastLED.setBrightness(constrain(json.document["brightness"], 0, 255));
+    }
+
+    APIserver.sendOK();
+  }
+}
+
 void setup()
 {
   Serial.begin(9600);
@@ -247,6 +266,7 @@ void setup()
   APIserver.onList(onGetList);
   APIserver.onStop(onStop);
   APIserver.onCurrent(onGetCurrent);
+  APIserver.onBrightness(onSetBrightness);
 
   // start server
   APIserver.begin();

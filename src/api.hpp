@@ -73,6 +73,11 @@ public:
         on("/current", onGetCurrent);
     }
 
+    void onBrightness(THandlerFunction onSetBrightness)
+    {
+        on("/brightness", HTTP_POST, onSetBrightness);
+    }
+
     void sendOK()
     {
         send(200, "application/json", "{status:ok}");
