@@ -12,7 +12,7 @@ Animation
 struct name_of_animation_config
 {
     CRGB color = CRGB::White;
-}
+};
 
 namespace name_of_animation
 {
@@ -30,6 +30,9 @@ namespace name_of_animation
         while (state.run)
         {
             // animation loop
+            // please don't use any delay function in this loop for fast animation shutdown.
+            // just use deltaTime and floating point numbers.
+            // esp32 has very powerfull 240mhz dual core cpu.
         }
 
         stop_task;
@@ -97,7 +100,7 @@ namespace name_of_animation
     // function to handle the animation start request.
     void onStartAPIrequest()
     {
-        Manager.start("simple_colors"); // don't need to set the configuration because we already have a pointer to this configuration in the init function.
+        Manager.start(name); // don't need to set the configuration because we already have a pointer to this configuration in the init function.
         APIserver.sendOK();
     }
 

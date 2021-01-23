@@ -6,6 +6,7 @@
 #include <json.hpp>
 
 #include <simple_colors.hpp>
+#include <rainbow.hpp>
 
 CRGB leds[LED_COUNT];
 
@@ -238,6 +239,7 @@ void setup()
   register animations;
   */
   simple_colors::init();
+  rainbow::init();
 
   ConnectToWiFi();
 
