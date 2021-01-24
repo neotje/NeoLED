@@ -8,6 +8,7 @@
 
 #define get_state Animation_state &state = *(Animation_state *)par
 #define get_config(type) type &config = *(type *)state.config
+
 #define stop_task    \
     FastLED.clear(); \
     FastLED.show();  \

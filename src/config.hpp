@@ -1,6 +1,6 @@
 #define VERBOSE
 
-#define LED_PIN 18
+#define LED_PIN 14
 #define LED_COUNT 201
 #define LED_PER_M 60
 

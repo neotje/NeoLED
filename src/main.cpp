@@ -1,5 +1,6 @@
 #include <config.h>
 #include <Arduino.h>
+#include <esp32-hal-cpu.h>
 #include <FastLED.h>
 #include <AnimationManager.hpp>
 #include <api.hpp>
@@ -7,6 +8,8 @@
 
 #include <simple_colors.hpp>
 #include <rainbow.hpp>
+#include <marquee.hpp>
+#include <comet.hpp>
 
 CRGB leds[LED_COUNT];
 
@@ -237,7 +240,7 @@ void onSetBrightness()
   } else {
     json.fromPost();
 
-    if (json.has_key("brightness"))
+    if (json.has_key("brightness") == true)
     {
       FastLED.setBrightness(constrain(json.document["brightness"], 0, 255));
     }
@@ -248,9 +251,12 @@ void onSetBrightness()
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
-  FastLED.addLeds<WS2852, LED_PIN, RGB>(leds, LED_COUNT);
+  Serial.print("CPU freq: ");
+  Serial.println(getCpuFrequencyMhz());
+
+  FastLED.addLeds<WS2813, LED_PIN, RGB>(leds, LED_COUNT);
   FastLED.showColor(CRGB::Black);
   FastLED.setBrightness(255);
 
@@ -259,6 +265,8 @@ void setup()
   */
   simple_colors::init();
   rainbow::init();
+  marquee::init();
+  comet::init();
 
   ConnectToWiFi();
 

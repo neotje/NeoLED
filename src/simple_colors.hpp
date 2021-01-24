@@ -8,7 +8,19 @@ extern CRGB leds[];
 struct simple_color_config
 {
     CRGB color = CRGB::White;
+    int temp = 0;
 };
+
+const int temps[9] = {
+    UncorrectedTemperature,
+    ClearBlueSky,
+    OvercastSky,
+    DirectSunlight,
+    HighNoonSun,
+    CarbonArc,
+    Halogen,
+    Tungsten100W,
+    Tungsten40W};
 
 namespace simple_colors
 {
@@ -25,6 +37,8 @@ namespace simple_colors
         while (state.run)
         {
             FastLED.showColor(config.color);
+            FastLED.setCorrection(TypicalLEDStrip);
+            FastLED.setTemperature(temps[config.temp]);
         }
 
         stop_task;
@@ -35,14 +49,17 @@ namespace simple_colors
     {
         json.clear();
         json.add_key("color", "RGB");
+        json.add_key("temp", "int");
         json.send();
     }
 
-    void onGetOptionsAPIrequest() {
+    void onGetOptionsAPIrequest()
+    {
         json.clear();
         json.document["color"]["r"] = config.color.r;
         json.document["color"]["g"] = config.color.g;
         json.document["color"]["b"] = config.color.b;
+        json.document["temp"] = config.temp;
         json.send();
     }
 
@@ -64,6 +81,11 @@ namespace simple_colors
                     (int)json.document["color"]["g"],
                     (int)json.document["color"]["b"]);
                 config.color = c;
+            }
+
+            if (json.has_key("temp"))
+            {
+                config.temp = (int)json.document["temp"];
             }
         }
 
