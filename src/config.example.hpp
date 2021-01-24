@@ -1,3 +1,6 @@
+#ifndef config_h
+#define config_h
+
 #define VERBOSE
 
 #define LED_PIN 18
@@ -6,3 +9,5 @@
 
 #define WIFI_SSID ""
 #define WIFI_PASSWORD ""
+
+#endif

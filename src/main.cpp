@@ -237,7 +237,9 @@ void onSetBrightness()
     json.clear();
     json.add_key("brightness", FastLED.getBrightness());
     json.send();
-  } else {
+  }
+  else
+  {
     json.fromPost();
 
     if (json.has_key("brightness") == true)
